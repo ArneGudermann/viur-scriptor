@@ -1,11 +1,10 @@
 // @ts-nocheck
 import {ref} from "vue";
 import {defineStore} from "pinia";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import {c} from "@codemirror/next/legacy-modes/mode/clike";
 
-interface NetworkError
-{
+interface NetworkError {
 	status: Number;
 	error: String;
 	title: String
@@ -36,6 +35,7 @@ export const useGlobalStore = defineStore("globalStore", () => {
 	function setCancelAutoSaveEvent(f: Function) {
 		cancelAutoSaveEvent.value = f;
 	}
+
 	function setStartAutoSaveEvent(f: Function) {
 		startAutoSaveEvent.value = f;
 	}
@@ -52,8 +52,7 @@ export const useGlobalStore = defineStore("globalStore", () => {
 			if (cancelAutoSaveEvent.value) {
 				cancelAutoSaveEvent.value();
 			}
-		}
-		else if (!shouldAutoSave.value && value) {
+		} else if (!shouldAutoSave.value && value) {
 			if (startAutoSaveEvent.value) {
 				startAutoSaveEvent.value();
 			}
@@ -119,17 +118,39 @@ export const useGlobalStore = defineStore("globalStore", () => {
 		return error.value.title;
 	}
 
-	function setErrorText(value: String)  {
+	function setErrorText(value: String) {
 		error.value.error = value;
 	}
+
 	function setErrorTitle(title: String) {
 		error.value.title = title;
 	}
+
 	function setErrorStatus(status: Number) {
 		error.value.status = status;
 	}
 
 	load()
 
-	return {getError, getErrorTitle, setErrorText, setErrorTitle, setErrorStatus, isLoading, setLoading, getLoadingState, modules, shouldAutoSave, load, setAutoSave, setCancelAutoSaveEvent, setStartAutoSaveEvent, setLanguage, language, autoSaveInterval, setAutoSaveInterval, getAutoSaveInterval}
+	return {
+		getError,
+		getErrorTitle,
+		setErrorText,
+		setErrorTitle,
+		setErrorStatus,
+		isLoading,
+		setLoading,
+		getLoadingState,
+		modules,
+		shouldAutoSave,
+		load,
+		setAutoSave,
+		setCancelAutoSaveEvent,
+		setStartAutoSaveEvent,
+		setLanguage,
+		language,
+		autoSaveInterval,
+		setAutoSaveInterval,
+		getAutoSaveInterval
+	}
 })

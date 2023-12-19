@@ -1,13 +1,12 @@
-import { useGlobalStore } from './global';
-import { ref } from 'vue';
-import { defineStore } from 'pinia'
-import { usePython} from "usepython";
-import { useTabStore } from './TabStore';
-import { useRoute } from 'vue-router';
+import {useGlobalStore} from './global';
+import {ref} from 'vue';
+import {defineStore} from 'pinia'
+import {usePython} from "usepython";
+import {useTabStore} from './TabStore';
+import {useRoute} from 'vue-router';
 
 
-interface PyEvents
-{
+interface PyEvents {
 	logCallback: Function,
 	errorCallback: Function,
 	runCallback: Function
@@ -19,10 +18,8 @@ export const usePythonStore = defineStore('python', () => {
 	const py = usePython();
 
 
-
 	py.log.listen((val) => {
-		if (val.exception.length == 0)
-		{
+		if (val.exception.length == 0) {
 			for (let entry in val.stdOut) {
 				if (scriptRunnerTab.value) {
 					let onLog = eventMap.value[scriptRunnerTab.value].logCallback;
@@ -31,9 +28,7 @@ export const usePythonStore = defineStore('python', () => {
 				}
 			}
 			// val.stdErr is also available
-		}
-		else
-		{
+		} else {
 
 
 			if (scriptRunnerTab.value) {
@@ -55,7 +50,6 @@ export const usePythonStore = defineStore('python', () => {
 	const runningText = ref<String>("");
 
 
-
 	const code = ref<string>('');
 	const scriptRunnerTab = ref<string>('');
 
@@ -69,7 +63,6 @@ export const usePythonStore = defineStore('python', () => {
 
 		return code.value;
 	}
-
 
 
 	async function init(key: string, onLogCallback: Function, onErrorCallback: Function, onRunCallback: Function) {
@@ -89,7 +82,7 @@ export const usePythonStore = defineStore('python', () => {
 	const timer = ref<NodeJS.Timer>();
 	const defaultCode = "#### scriptor ####\nfrom viur.scriptor import dialog\n\nasync def main():\n    await dialog.alert(\"Hello World\")";
 
-	let runScript = function (code: string, name: string = undefined, key: string = undefined){
+	let runScript = function (code: string, name: string = undefined, key: string = undefined) {
 		let extraCode = "from scriptor import message\nmessage.called=False\nimport traceback\nfrom viur.scriptor import print,logging, init as __scriptor__init\nawait __scriptor__init()\n";
 		if (code.includes("async def main():"))
 			code += "\ntry:\tawait main()\nexcept:\n\tlogging.error(traceback.format_exc())"
@@ -172,33 +165,29 @@ export const usePythonStore = defineStore('python', () => {
 	   `)
 
 
-
 		let object = {};
 
 
 		if (route.query["scriptor_params"]) {
 			console.log("script params", route.query.scriptor_params);
 
-			if (typeof route.query.scriptor_params === 'string')
-			{
+			if (typeof route.query.scriptor_params === 'string') {
 				try {
-					let _string = route.query.scriptor_params.replace(/'/g, '"');;
+					let _string = route.query.scriptor_params.replace(/'/g, '"');
+					;
 					object = JSON.parse(_string)
-				}
-				catch(error) {
+				} catch (error) {
 					console.error(error)
 				}
-			}
-			else
-			{
+			} else {
 				object = route.query.scriptor_params;
 			}
 		}
 
-	   await py.sendParams(object)
-	   await py.sendLanguage(global.language);
+		await py.sendParams(object)
+		await py.sendLanguage(global.language);
 
-	   isLoading.value = false;
+		isLoading.value = false;
 
 	}
 
@@ -218,12 +207,26 @@ export const usePythonStore = defineStore('python', () => {
 		await loadPython();
 
 		await py.restoreFS();
-	   	await py.sendLanguage(global.language);
+		await py.sendLanguage(global.language);
 
 		global.setLoading(false);
 
 	}
 
 
-	return { py, run, setCode, getCode, init, runScript, loadPython, reloadPyodide, isLoading, scriptRunnerTab, isExecuting, runningText, defaultCode }
+	return {
+		py,
+		run,
+		setCode,
+		getCode,
+		init,
+		runScript,
+		loadPython,
+		reloadPyodide,
+		isLoading,
+		scriptRunnerTab,
+		isExecuting,
+		runningText,
+		defaultCode
+	}
 })
